@@ -3,393 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zando Marketplace - Emissor Oficial</title>
+    <title>Zando - Fatura Proforma</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        :root { --primary: #1a1a1a; --accent: #27ae60; --text-muted: #7f8c8d; }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; transition: all 0.2s ease; }
+        body { background: #f0f2f5; margin: 0; padding: 0; color: #333; }
+
+        /* BARRA FIXA (IDÊNTICA AO FATURAS.HTML) */
+        .no-print-nav { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 70px; background: white; 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 40px; box-shadow: 0 2px 15px rgba(0,0,0,0.08); z-index: 1000; 
+        }
+
+        .btn-voltar {
+            text-decoration: none; background: #f5f5f5; color: #1a1a1a; 
+            padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: 700;
+        }
+        .btn-voltar:hover { background: #e0e0e0; }
+
+        .app-container { display: flex; gap: 20px; max-width: 1400px; margin: 100px auto 40px; justify-content: center; padding: 0 20px; }
+
+        /* PAINEL LATERAL */
+        .sidebar { width: 380px; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content; position: sticky; top: 90px; }
+        .group { margin-bottom: 18px; border-bottom: 1px solid #f5f5f5; padding-bottom: 12px; }
+        label { display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; margin-bottom: 5px; background: #fff; }
+        
+        .btn-add { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 700; margin-top: 5px; }
+        .btn-pdf { background: var(--accent); color: white; border: none; padding: 16px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 700; margin-top: 20px; font-size: 14px; }
+
+        /* ÁREA DA FATURA A4 */
+        #fatura-area { width: 210mm; min-height: 297mm; background: white; padding: 20mm; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.1); margin-bottom: 50px; }
+        
+        header { display: flex; justify-content: space-between; margin-bottom: 40px; align-items: flex-start; }
+        .logo-img { max-width: 200px; height: auto; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 30px; }
+        th { background: #f9f9f9; padding: 12px 10px; border-bottom: 2px solid #000; font-size: 10px; text-align: left; text-transform: uppercase; }
+        td { padding: 15px 10px; border-bottom: 1px solid #eee; font-size: 12px; line-height: 1.4; }
+
+        .totals-box { margin-left: auto; width: 280px; font-size: 13px; }
+        .total-item { display: flex; justify-content: space-between; padding: 6px 0; }
+        .grand-total { font-size: 18px; font-weight: 800; border-top: 2px solid #000; margin-top: 12px; padding-top: 12px; }
+
+        /* RODAPÉ CARDS */
+        .info-footer-grid { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding-top: 30px; border-top: 1px solid #eee; }
+        .info-card { background: #fbfbfb; padding: 15px; border-radius: 8px; border: 1px solid #f0f0f0; }
+        .info-card b { font-size: 10px; color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 8px; }
+        .info-card p { margin: 4px 0; font-size: 11px; color: #444; }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 900px) {
+            .app-container { flex-direction: column; margin-top: 80px; }
+            .sidebar { width: 100%; position: static; }
+            #fatura-area { width: 100%; padding: 10mm; min-height: unset; }
+            .no-print-nav { padding: 0 20px; }
+            .info-footer-grid { grid-template-columns: 1fr; }
+        }
+
         @media print {
-        /* Esconde a barra de navegação e qualquer elemento com a classe no-print */
-        .no-print { 
-            display: none !important; 
-            height: 0 !important; 
-            margin: 0 !important; 
-            padding: 0 !important;
-        }
-
-        body { 
-            background: white !important; 
-            padding: 0 !important; 
-            margin: 0 !important; 
-        }
-
-        /* REMOVE O ESPAÇO DO TOPO: Força o espaçador a ter altura zero no PDF */
-        div[style*="margin-top: 100px"], 
-        div[style*="margin-top: 90px"] { 
-            margin-top: 0 !important; 
-            display: none !important;
-        }
-
-        /* Garante que o contentor da app não tenha margens no PDF */
-        .app-container { 
-            margin-top: 0 !important; 
-            padding-top: 0 !important; 
-        }
-
-        /* Ajusta a área da fatura para colar no topo */
-        #fatura-area { 
-            margin: 0 !important; 
-            box-shadow: none !important;
-            border: none !important;
-        }
-    }
-        :root {
-            --primary-color: #1a1a1a;
-            --accent-color: #27ae60;
-            --text-muted: #7f8c8d;
-            --border-color: #eee;
-        }
-
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: #f0f2f5; margin: 0; padding: 10px; color: #333; }
-
-        .app-container { display: flex; gap: 20px; max-width: 1350px; margin: auto; justify-content: center; }
-
-        /* Painel Lateral */
-        .sidebar { 
-            width: 350px; background: white; padding: 20px; border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content;
-            position: sticky; top: 10px; font-size: 13px;
-        }
-        .group { margin-bottom: 8px; }
-        label { display: block; font-size: 9px; font-weight: 700; margin-bottom: 3px; color: var(--text-muted); text-transform: uppercase; }
-        input, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px; }
-        
-        button.main-btn { 
-            width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: 600; 
-            cursor: pointer; margin-top: 8px; font-size: 13px;
-        }
-        .btn-update { background: var(--primary-color); color: white; }
-        .btn-pdf { background: var(--accent-color); color: white; }
-
-        /* ÁREA DA FATURA - ENQUADRAMENTO A4 RÍGIDO */
-        #fatura-area { 
-            width: 210mm; 
-            height: 297mm; /* Altura fixa A4 */
-            background: white; 
-            padding: 20mm; /* Margem de 2cm solicitada */
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; /* Garante que nada escape para a 2ª folha */
-            position: relative;
-        }
-
-        header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-        
-        .brand-container { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
-        
-        /* Ajuste para Logo Retangular */
-        .logo-img { 
-            max-width: 180px; /* Largura para formato retangular */
-            height: 60px; /* Altura máxima controlada */
-            object-fit: contain; /* Mantém a proporção sem cortar */
-            margin-bottom: 5px; 
-        }
-
-        .brand h1 { margin: 0; font-size: 16px; font-weight: 700; color: #000; text-transform: uppercase; }
-        .brand p { margin: 0; font-size: 9px; color: var(--text-muted); font-weight: 600; }
-        
-        .doc-type { text-align: right; }
-        .doc-type h3 { margin: 0; font-size: 14px; color: var(--primary-color); font-weight: 700; }
-        .doc-type p { margin: 1px 0; font-size: 10px; }
-
-        .details-section { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 11px; }
-        .details-section strong { display: block; margin-bottom: 4px; color: var(--text-muted); text-transform: uppercase; font-size: 8px; }
-
-        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-        th { background: #f9f9f9; text-align: left; padding: 10px; border-bottom: 2px solid var(--primary-color); font-size: 9px; text-transform: uppercase; }
-        td { padding: 12px 10px; border-bottom: 1px solid var(--border-color); font-size: 12px; line-height: 1.4; }
-
-        .extenso-box { background: #fcfcfc; padding: 10px; border: 1px solid #eee; font-size: 10px; margin-bottom: 15px; }
-        .extenso-box b { color: var(--primary-color); text-transform: uppercase; font-size: 8px; display: block; }
-
-        .total-row.grand-total { 
-            display: flex; width: 280px; justify-content: space-between; margin-left: auto;
-            font-weight: 700; font-size: 16px; border-top: 2px solid var(--primary-color); 
-            padding-top: 8px; color: #000; margin-bottom: 20px;
-        }
-
-        /* Rodapé fixado no limite da margem inferior */
-        .extra-info { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: auto; }
-        .info-card { background: #f9f9f9; padding: 10px; border-radius: 6px; border: 1px solid #eee; font-size: 10px; }
-        .info-card b { display: block; margin-bottom: 3px; font-size: 8px; color: var(--text-muted); text-transform: uppercase; }
-
-        footer { margin-top: 15px; font-size: 8px; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 10px; text-align: justify; }
-
-        /* Estilo específico para PDF */
-        @media print { 
-            body { background: white; margin: 0; padding: 0; }
-            .sidebar { display: none; } 
-            #fatura-area { box-shadow: none; border: none; padding: 20mm; margin: 0; } 
+            .no-print-nav, .sidebar { display: none !important; }
+            #fatura-area { box-shadow: none; margin: 0; width: 210mm; }
         }
     </style>
 </head>
 <body>
-    <nav class="no-print" style="position: fixed; top: 0; left: 0; width: 100%; height: 70px; background: white; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; box-shadow: 0 2px 15px rgba(0,0,0,0.08); z-index: 1000;">
-    
-    <div style="display: flex; align-items: center; gap: 20px;">
-        <a href="index.html">
-            <img src="zando_logo_fatura.png" alt="Zando Logo" style="height: 45px; width: auto; display: block;">
-        </a>
-        <div style="border-left: 1px solid #eee; padding-left: 20px; color: #999; font-size: 11px; font-weight: 700; letter-spacing: 1px;">
-            EMISSOR PROFORMA
-        </div>
-    </div>
 
-    <a href="index.html" style="text-decoration: none; background: #f5f5f5; color: #1a1a1a; padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: 700; transition: 0.3s; display: flex; align-items: center; gap: 8px;">
-        <span>←</span> VOLTAR AO MENU
-    </a>
-</nav>
-
-<div class="no-print" style="margin-top: 100px;"></div>
-    <nav class="no-print" style="position: fixed; top: 0; left: 0; width: 100%; height: 70px; background: white; display: flex; align-items: center; padding: 0 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000;">
-    <a href="index.html" style="text-decoration: none;">
-        <img src="zando_logo_fatura.png" alt="Zando Logo" style="height: 40px; width: auto;">
-    </a>
-    <div style="margin-left: 20px; border-left: 1px solid #ddd; padding-left: 20px; color: #7f8c8d; font-size: 11px; font-weight: 700;">
-        <a href="index.html" style="text-decoration: none; color: #1a1a1a; letter-spacing: 1px;">← VOLTAR AO MENU</a>
-    </div>
-</nav>
-
-<div class="no-print" style="margin-top: 100px;"></div>
-
-<div class="app-container">
-    <aside class="sidebar">
-        <div class="group">
-            <label>Cliente</label>
-            <input type="text" id="in_cliente" placeholder="Nome Completo" oninput="atualizarFatura()">
-            <input type="text" id="in_nif_cliente" placeholder="NIF" oninput="atualizarFatura()" style="margin-top:4px;">
-            <input type="text" id="in_endereco_cliente" placeholder="Morada" oninput="atualizarFatura()" style="margin-top:4px;">
+    <nav class="no-print-nav">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <a href="index.html"><img src="zando_logo_fatura.png" alt="Zando" style="height: 45px;"></a>
+            <div style="border-left: 1px solid #ddd; padding-left: 20px; color: var(--text-muted); font-size: 11px; font-weight: 700; text-transform: uppercase;">FATURA PROFORMA</div>
         </div>
-        <div class="group">
-            <label>Máquina</label>
-            <input type="text" id="in_pc_nome" placeholder="Ex: Dell Optiplex 7050" oninput="atualizarFatura()">
-        </div>
-        <div class="group">
-            <label>Processador</label>
-            <select id="in_cpu" onchange="autoPreco()">
-                <option value="Core i3 - 4ª Geração" data-price="90000">Core i3 - 6ª Ger (90.000 Kz)</option>
-                <option value="Core i3 - 6ª Geração" data-price="110000">Core i3 - 6ª Ger (110.000 Kz)</option>
-                <option value="Core i3 - 7ª Geração" data-price="130000">Core i3 - 6ª Ger (130.000 Kz)</option>
-                <option value="Core i5 - 4ª Geração" data-price="100000">Core i3 - 6ª Ger (100.000 Kz)</option>
-                <option value="Core i5 - 6ª Geração" data-price="140000">Core i3 - 6ª Ger (140.000 Kz)</option>
-                <option value="Core i5 - 7ª Geração" data-price="150000">Core i5 - 6ª Ger (150.000 Kz)</option>
-                <option value="Core i5 - 8ª Geração" data-price="170000">Core i5 - 8ª Ger (170.000 Kz)</option>
-                <option value="Core i7 - 3ª Geração" data-price="120000">Core i7 - 6ª Ger (120.000 Kz)</option>
-                <option value="Core i7 - 4ª Geração" data-price="125000">Core i3 - 6ª Ger (125.000 Kz)</option>
-                <option value="Core i7 - 6ª Geração" data-price="170000">Core i3 - 6ª Ger (170.000 Kz)</option>
-            </select>
-        </div>
-        <div class="group">
-            <label>RAM & Disco</label>
-            <select id="in_ram" onchange="atualizarFatura()" style="margin-bottom:4px;">
-                <option value="8GB RAM DDR4" selected>8GB DDR4</option>
-                <option value="16GB RAM DDR4">16GB DDR4</option>
-                <option value="32GB RAM DDR4">32GB DDR4</option>
-                <option value="4GB RAM DDR3">4GB DDR3</option>
-                <option value="8GB RAM DDR3">8GB DDR3</option>
-                <option value="16GB RAM DDR3">16GB DDR3</option>
-            </select>
-            <select id="in_disk" onchange="atualizarFatura()">
-                <option value="250GB HDD">250GB HDD</option>
-                <option value="240GB SSD">240GB SSD</option>
-                <option value="500GB HDD">500GB HDD</option>
-                <option value="500GB SSD">500GB SSD</option>
-                <option value="480GB SSD">480GB SSD</option>
-                <option value="1TB HDD">1TB HDD</option>
-            </select>
-        </div>
-        <div class="group">
-            <label>Preço Final (Kz)</label>
-            <input type="number" id="in_preco" oninput="atualizarFatura()">
-        </div>
+        <a href="index.html" class="btn-voltar">← VOLTAR</a>
+    </nav>
 
-        <button class="main-btn btn-update" onclick="atualizarFatura()">Atualizar Visualização</button>
-        <button class="main-btn btn-pdf" onclick="exportarParaPDF()">Baixar PDF (A4 Único)</button>
-    </aside>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="group">
+                <label>Dados do Cliente</label>
+                <input type="text" id="in_cliente" placeholder="Nome do Cliente" oninput="update()">
+                <input type="text" id="in_nif" placeholder="NIF" oninput="update()">
+                <input type="text" id="in_local" placeholder="Localização" oninput="update()">
+            </div>
 
-    <main id="fatura-area">
-        <header>
-            <div class="brand-container">
-                <img src="zando_logo_fatura.png" alt="Logo Zando" class="logo-img">
+            <div class="group">
+                <label>Item / Serviço</label>
+                <input type="text" id="item_desc" placeholder="Ex: Kit Starlink Standard">
+                <input type="number" id="item_preco" placeholder="Preço (Kz)">
+                <input type="number" id="item_qtd" value="1">
+                <button class="btn-add" onclick="addItem()">ADICIONAR ITEM</button>
+            </div>
+
+            <div class="group">
+                <label>Notas</label>
+                <textarea id="in_obs" placeholder="Validade da proforma, prazo..." oninput="update()"></textarea>
+            </div>
+
+            <button class="btn-pdf" onclick="exportPDF()">GERAR PROFORMA PDF</button>
+        </aside>
+
+        <main id="fatura-area">
+            <header>
                 <div class="brand">
-                    <h1>Zando Marketplace</h1>
-                    <p>SUECOMEDIA E TECNOLOGIA - PRESTAÇÃO DE SERVIÇOS, (SU), LDA.</p>
-                    <p><b>NIF: 5002657805</b> | Luanda, Angola</p>
+                    <img src="zando_logo_fatura.png" alt="Logo" class="logo-img">
+                    <p><b>SUECOMEDIA E TECNOLOGIA, (SU), LDA.</b></p>
+                    <p>NIF: 5002657805 | Luanda, Angola</p>
+                </div>
+                <div style="text-align: right;">
+                    <h2 style="margin:0; font-size: 18px;">FATURA PROFORMA</h2>
+                    <p id="out_data" style="font-weight: 600;">--/--/----</p>
+                </div>
+            </header>
+
+            <div style="margin-bottom: 30px; font-size: 12px;">
+                <p style="margin: 0; font-size: 16px; font-weight: 700;" id="out_cliente">---</p>
+                <p style="margin: 2px 0;">NIF: <span id="out_nif">---</span></p>
+                <p style="margin: 2px 0;">📍 <span id="out_local">---</span></p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 60%;">DESCRIÇÃO</th>
+                        <th style="text-align: center;">QTD</th>
+                        <th style="text-align: right;">TOTAL (Kz)</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela_corpo"></tbody>
+            </table>
+
+            <div style="display: flex; justify-content: space-between;">
+                <div style="width: 50%;">
+                    <p style="font-size: 10px; font-weight: 700; color: var(--text-muted);">NOTAS:</p>
+                    <p id="out_obs" style="font-size: 11px; color: #555;">Válido por 5 dias.</p>
+                </div>
+                <div class="totals-box">
+                    <div class="total-item"><span>SUBTOTAL:</span> <span id="out_sub">0,00 Kz</span></div>
+                    <div class="total-item grand-total"><span>TOTAL:</span> <span id="out_total">0,00 Kz</span></div>
                 </div>
             </div>
-            <div class="doc-type">
-                <h3>FATURA PROFORMA</h3>
-                <p>Data: <span id="out_data">--/--/----</span></p>
-                <p>Nº: <span id="out_num">2026/0001</span></p>
+
+            <div class="info-footer-grid">
+                <div class="info-card">
+                    <b>Dados Bancários (BAI)</b>
+                    <p>IBAN: <b>AO06 0000 6400 8480 1028 2</b></p>
+                    <p>Titular: <b>Paulo Ngindo Jorge Sueco</b></p>
+                </div>
+                <div class="info-card">
+                    <b>Contactos Zando</b>
+                    <p>📞 959 354 904 | 928 872 457</p>
+                    <p>📧 comercial@zando.co.ao</p>
+                </div>
             </div>
-        </header>
+        </main>
+    </div>
 
-        <section class="details-section">
-            <div class="to">
-                <strong>DESTINATÁRIO</strong>
-                <p id="out_cliente" style="font-weight: 600; font-size: 13px; margin: 0;">Nome do Cliente</p>
-                <p style="margin: 2px 0;">NIF: <span id="out_nif_cliente">---</span></p>
-                <p id="out_endereco_cliente" style="color: #666; font-size: 10px;">Endereço não informado</p>
-            </div>
-            <div class="payment-terms" style="text-align: right;">
-                <strong>CONDIÇÕES</strong>
-                <p>Pagamento: Transferência</p>
-                <p>Garantia: 3 Meses</p>
-            </div>
-        </section>
+    <script>
+        let itens = [];
 
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 75%;">ESPECIFICAÇÕES TÉCNICAS</th>
-                    <th style="text-align: right;">VALOR (KZ)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <b id="out_pc_nome" style="text-transform: uppercase; font-size: 12px;">EQUIPAMENTO</b><br>
-                        <span id="out_specs" style="color: #444; font-size: 11px;">Carregando configurações...</span>
-                    </td>
-                    <td id="out_total_tabela" style="text-align: right; font-weight: 700;">0,00 Kz</td>
-                </tr>
-            </tbody>
-        </table>
+        function addItem() {
+            const desc = document.getElementById('item_desc').value;
+            const preco = parseFloat(document.getElementById('item_preco').value);
+            const qtd = parseInt(document.getElementById('item_qtd').value);
 
-        <div class="extenso-box">
-            <b>Total por extenso:</b>
-            <span id="out_extenso" style="font-style: italic;">Zero Kwanzas.</span>
-        </div>
-
-        <div class="total-row grand-total">
-            <span>TOTAL A PAGAR:</span>
-            <span id="out_total_final">0,00 Kz</span>
-        </div>
-
-        <div class="extra-info">
-            <div class="info-card">
-                <b>PAGAMENTO (BAI)</b>
-                <p>IBAN: <b>AO06 0000 6400 8480 1028 2</b></p>
-                <p>Titular: <b>Paulo Ngindo Jorge Sueco</b></p>
-            </div>
-            <div class="info-card">
-                <b>CONTACTOS ZANDO</b>
-                <p>📍 Kilamba Kiaxi - Palanca, Utanga</p>
-                <p>📞 959 354 904 | 928 872 457</p>
-            </div>
-        </div>
-
-        <footer>
-            <p><strong>Nota:</strong> Esta Proforma tem validade de 48h. Equipamentos usados com garantia de hardware. Emitido eletronicamente via Sistema Zando Marketplace.</p>
-        </footer>
-    </main>
-</div>
-
-<script>
-    function autoPreco() {
-        const select = document.getElementById('in_cpu');
-        const preco = select.options[select.selectedIndex].getAttribute('data-price');
-        document.getElementById('in_preco').value = preco;
-        atualizarFatura();
-    }
-
-    function numeroParaExtenso(n) {
-        if (n === 0) return "Zero Kwanzas";
-        const unidades = ["", "Um", "Dois", "Três", "Quatro", "Cinco", "Seis", "Sete", "Oito", "Nove"];
-        const dezena1 = ["Dez", "Onze", "Doze", "Treze", "Catorze", "Quinze", "Dezesseis", "Dezessete", "Dezoito", "Dezenove"];
-        const dezenas = ["", "", "Vinte", "Trinta", "Quarenta", "Cinquenta", "Sessenta", "Setenta", "Oitenta", "Noventa"];
-        const centenas = ["", "Cento", "Duzentos", "Trezentos", "Quatrozentos", "Quinhentos", "Seiscentos", "Setecentos", "Oitocentos", "Novecentos"];
-
-        function conversor(num) {
-            let s = "";
-            if (num > 99) {
-                if (num === 100) return "Cem";
-                s += centenas[Math.floor(num / 100)];
-                num %= 100;
-                if (num > 0) s += " e ";
+            if (desc && preco > 0) {
+                itens.push({ desc, preco, qtd });
+                update();
+                document.getElementById('item_desc').value = "";
+                document.getElementById('item_preco').value = "";
             }
-            if (num > 19) {
-                s += dezenas[Math.floor(num / 10)];
-                num %= 10;
-                if (num > 0) s += " e ";
-            } else if (num > 9) {
-                s += dezena1[num - 10];
-                num = 0;
-            }
-            if (num > 0) s += unidades[num];
-            return s;
         }
 
-        let extenso = "";
-        let milhoes = Math.floor(n / 1000000);
-        let mil = Math.floor((n % 1000000) / 1000);
-        let resto = Math.floor(n % 1000);
+        function update() {
+            document.getElementById('out_cliente').innerText = document.getElementById('in_cliente').value || "---";
+            document.getElementById('out_nif').innerText = document.getElementById('in_nif').value || "---";
+            document.getElementById('out_local').innerText = document.getElementById('in_local').value || "---";
+            document.getElementById('out_data').innerText = new Date().toLocaleDateString('pt-AO');
+            document.getElementById('out_obs').innerText = document.getElementById('in_obs').value || "Válido por 5 dias.";
 
-        if (milhoes > 0) {
-            extenso += conversor(milhoes) + (milhoes > 1 ? " Milhões" : " Milhão");
-            if (mil > 0 || resto > 0) extenso += " e ";
+            let totalGeral = 0;
+            const corpo = document.getElementById('tabela_corpo');
+            corpo.innerHTML = "";
+
+            itens.forEach(it => {
+                const total = it.preco * it.qtd;
+                totalGeral += total;
+                corpo.innerHTML += `<tr><td>${it.desc}</td><td style="text-align:center">${it.qtd}</td><td style="text-align:right">${total.toLocaleString()} Kz</td></tr>`;
+            });
+
+            document.getElementById('out_sub').innerText = totalGeral.toLocaleString() + " Kz";
+            document.getElementById('out_total').innerText = totalGeral.toLocaleString() + " Kz";
         }
-        if (mil > 0) {
-            extenso += (mil === 1 ? "Mil" : conversor(mil) + " Mil");
-            if (resto > 0) extenso += " e ";
+
+        function exportPDF() {
+            const element = document.getElementById('fatura-area');
+            const agora = new Date();
+            const dataStr = agora.toLocaleDateString('pt-AO').replaceAll('/', '-');
+            const horaStr = agora.getHours() + 'h' + agora.getMinutes();
+            const nomeArquivo = `Proforma_Zando_${dataStr}_${horaStr}.pdf`;
+
+            html2pdf().set({
+                margin: 0,
+                filename: nomeArquivo,
+                html2canvas: { scale: 3, scrollY: 0 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).from(element).save();
         }
-        if (resto > 0) extenso += conversor(resto);
-        return extenso + " Kwanzas.";
-    }
 
-    function atualizarFatura() {
-        document.getElementById('out_cliente').innerText = document.getElementById('in_cliente').value || "Nome do Cliente";
-        document.getElementById('out_nif_cliente').innerText = document.getElementById('in_nif_cliente').value || "---";
-        document.getElementById('out_endereco_cliente').innerText = document.getElementById('in_endereco_cliente').value || "Endereço não informado";
-        document.getElementById('out_pc_nome').innerText = document.getElementById('in_pc_nome').value || "EQUIPAMENTO INFORMÁTICO";
-        
-        const cpu = document.getElementById('in_cpu').value;
-        const ram = document.getElementById('in_ram').value;
-        const disk = document.getElementById('in_disk').value;
-        document.getElementById('out_specs').innerText = `${cpu}, ${ram}, ${disk}, Cabo de Alimentação Original.`;
-
-        const preco = parseFloat(document.getElementById('in_preco').value) || 0;
-        const formatarMoeda = (v) => v.toLocaleString('pt-AO', { minimumFractionDigits: 2 }) + " Kz";
-
-        document.getElementById('out_total_tabela').innerText = formatarMoeda(preco);
-        document.getElementById('out_total_final').innerText = formatarMoeda(preco);
-        document.getElementById('out_extenso').innerText = numeroParaExtenso(Math.floor(preco));
-        document.getElementById('out_data').innerText = new Date().toLocaleDateString('pt-AO');
-    }
-// Atualize a função exportPDF no proforma.html
-function exportPDF() {
-    const element = document.getElementById('fatura-area');
-    
-    const agora = new Date();
-    const dataStr = agora.toLocaleDateString('pt-AO').replaceAll('/', '-');
-    const horaStr = agora.getHours() + 'h' + agora.getMinutes();
-    const nomeArquivo = `Proforma_Zando_${dataStr}_${horaStr}.pdf`;
-
-    html2pdf().set({
-        margin: 0,
-        filename: nomeArquivo,
-        html2canvas: { scale: 3, scrollY: 0 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    }).from(element).save();
-}
-
-    window.onload = () => {
-        document.getElementById('out_data').innerText = new Date().toLocaleDateString('pt-AO');
-        autoPreco();
-    };
-</script>
-
+        window.onload = update;
+    </script>
 </body>
 </html>
