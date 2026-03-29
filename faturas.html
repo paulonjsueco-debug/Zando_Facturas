@@ -9,6 +9,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        /* CSS Responsivo para faturas.html e proforma.html */
+    @media (max-width: 900px) {
+        .app-container { 
+            flex-direction: column; 
+            align-items: center; 
+            margin-top: 80px;
+        }
+        .sidebar { 
+            width: 100%; 
+            position: static; 
+            margin-bottom: 20px; 
+        }
+        #fatura-area { 
+            width: 100%; /* Ocupa a largura do telemóvel para edição */
+            min-width: unset;
+            padding: 10mm; /* Menos margem no mobile */
+            transform-origin: top left;
+        }
+        /* Forçamos o conteúdo a não quebrar layout no mobile */
+        table { font-size: 10px; }
+        .info-footer-grid { grid-template-columns: 1fr; }
+    }
         :root { --primary: #1a1a1a; --accent: #27ae60; --text-muted: #7f8c8d; }
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: #f0f2f5; margin: 0; padding: 0; color: #333; }
@@ -230,15 +252,23 @@
             document.getElementById('out_total').innerText = subtotal.toLocaleString('pt-AO') + " Kz";
         }
 
-        function exportPDF() {
-            const element = document.getElementById('fatura-area');
-            html2pdf().set({
-                margin: 0,
-                filename: 'Fatura_Comercial_Zando.pdf',
-                html2canvas: { scale: 3, scrollY: 0 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            }).from(element).save();
-        }
+       function exportPDF() {
+        const element = document.getElementById('fatura-area');
+        
+        // Gerar Data e Hora para o nome do arquivo
+        const agora = new Date();
+        const dataStr = agora.toLocaleDateString('pt-AO').replaceAll('/', '-');
+        const horaStr = agora.getHours() + 'h' + agora.getMinutes();
+        const nomeArquivo = `Fatura_Comercial_Zando_${dataStr}_${horaStr}.pdf`;
+
+        const opt = {
+            margin: 0,
+            filename: nomeArquivo,
+            html2canvas: { scale: 3, useCORS: true, scrollY: 0 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
 
         window.onload = update;
     </script>
