@@ -368,24 +368,21 @@
         document.getElementById('out_extenso').innerText = numeroParaExtenso(Math.floor(preco));
         document.getElementById('out_data').innerText = new Date().toLocaleDateString('pt-AO');
     }
-
-   function exportarParaPDF() {
-    const elemento = document.getElementById('fatura-area');
+// Atualize a função exportPDF no proforma.html
+function exportPDF() {
+    const element = document.getElementById('fatura-area');
     
-    const opt = {
-        margin: 0, // Margem zero no objeto do PDF
-        filename: 'Zando_Proforma.pdf',
-        image: { type: 'jpeg', quality: 1.0 },
-        html2canvas: { 
-            scale: 3, // Aumenta a qualidade
-            useCORS: true, 
-            scrollY: 0, // Força o scroll para o topo antes de capturar
-            windowHeight: elemento.scrollHeight 
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
+    const agora = new Date();
+    const dataStr = agora.toLocaleDateString('pt-AO').replaceAll('/', '-');
+    const horaStr = agora.getHours() + 'h' + agora.getMinutes();
+    const nomeArquivo = `Proforma_Zando_${dataStr}_${horaStr}.pdf`;
 
-    html2pdf().set(opt).from(elemento).save();
+    html2pdf().set({
+        margin: 0,
+        filename: nomeArquivo,
+        html2canvas: { scale: 3, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    }).from(element).save();
 }
 
     window.onload = () => {
