@@ -8,20 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        .menu-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-        width: 95%; /* Aumentado para mobile */
-        max-width: 850px;
-        margin: 100px auto 40px;
-    }
-
-    @media (max-width: 600px) {
-        .menu-container { grid-template-columns: 1fr; }
-        .card { padding: 30px 20px; }
-        nav { padding: 0 15px; justify-content: center; }
-        nav div { display: none; } /* Esconde o texto da nav no mobile para dar foco ao logo */
         :root {
             --primary: #1a1a1a;
             --accent: #27ae60;
@@ -29,7 +15,11 @@
             --bg: #f4f7f6;
         }
 
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Inter', sans-serif; 
+            transition: all 0.3s ease; 
+        }
         
         body { 
             background: var(--bg); 
@@ -40,9 +30,10 @@
             justify-content: center; 
             min-height: 100vh;
             color: #333;
+            padding: 20px;
         }
 
-        /* Barra de Navegação Superior */
+        /* Barra de Navegação Superior Responsiva */
         nav { 
             position: fixed; 
             top: 0; 
@@ -52,87 +43,162 @@
             background: white; 
             display: flex; 
             align-items: center; 
-            padding: 0 30px; 
+            padding: 0 40px; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
             z-index: 1000; 
         }
 
-        /* Grade de Opções */
+        .nav-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-nav { height: 45px; width: auto; display: block; }
+
+        .nav-title {
+            margin-left: 20px; 
+            border-left: 1px solid #ddd; 
+            padding-left: 20px; 
+            color: var(--text-muted); 
+            font-size: 12px; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+        }
+
+        /* Grade de Opções Adaptativa */
         .menu-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
-            width: 90%;
-            max-width: 850px;
-            margin-top: 100px; /* Compensa a nav fixa */
+            width: 100%;
+            max-width: 900px;
+            margin-top: 100px;
         }
 
         .card {
             background: white;
-            padding: 45px 30px;
-            border-radius: 20px;
+            padding: 50px 30px;
+            border-radius: 24px;
             text-align: center;
             text-decoration: none;
             color: inherit;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
             border: 2px solid transparent;
             position: relative;
-            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .card:hover {
             border-color: var(--accent);
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
         }
 
-        .icon { font-size: 45px; display: block; margin-bottom: 20px; }
-        h2 { font-size: 18px; margin: 0 0 10px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
-        p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin: 0; }
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            background: #f9f9f9;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 25px;
+        }
 
-        /* Rodapé */
+        .card:hover .icon-box {
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        h2 { 
+            font-size: 18px; 
+            margin: 0 0 12px; 
+            color: var(--primary); 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        p { 
+            font-size: 14px; 
+            color: var(--text-muted); 
+            line-height: 1.6; 
+            margin: 0; 
+            max-width: 240px;
+        }
+
+        /* Rodapé Responsivo */
         .main-footer {
             margin-top: 60px;
             text-align: center;
-            padding: 20px;
+            padding: 30px 20px;
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             border-top: 1px solid #ddd;
         }
-        .main-footer p { font-size: 11px; color: var(--text-muted); margin: 5px 0; }
+
+        .main-footer p { font-size: 11px; color: var(--text-muted); margin: 6px 0; max-width: 100%; }
         .main-footer b { color: var(--primary); }
+
+        /* REGRAS PARA TELEMÓVEIS (MOBILE) */
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; justify-content: center; }
+            .nav-title { display: none; } /* Oculta o título na barra para dar espaço ao logo */
+            
+            .menu-container {
+                grid-template-columns: 1fr; /* Uma coluna apenas no telemóvel */
+                margin-top: 90px;
+                padding: 0 10px;
+            }
+
+            .card { padding: 40px 20px; }
+            
+            h1 { font-size: 18px; }
+            
+            .main-footer { margin-top: 40px; }
+        }
     </style>
 </head>
 <body>
 
     <nav>
-        <a href="index.html" style="text-decoration: none;">
-            <img src="zando_logo_fatura.png" alt="Zando Logo" style="height: 45px; width: auto; display: block;">
-        </a>
-        <div style="margin-left: 20px; border-left: 1px solid #ddd; padding-left: 20px; color: var(--text-muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
-            Painel Administrativo
+        <div class="nav-content">
+            <a href="index.html" style="text-decoration: none;">
+                <img src="zando_logo_fatura.png" alt="Zando Logo" class="logo-nav">
+            </a>
+            <div class="nav-title">Painel Administrativo</div>
         </div>
     </nav>
 
     <div class="menu-container">
+        
         <a href="proforma.html" class="card">
-            <span class="icon">📄</span>
+            <div class="icon-box">📄</div>
             <h2>Fatura Proforma</h2>
-            <p>Gerar orçamentos detalhados em A4 para cotações de equipamentos Starlink e serviços.</p>
+            <p>Emissão de orçamentos e cotações Starlink para clientes.</p>
         </a>
 
         <a href="faturas.html" class="card">
-            <span class="icon">💰</span>
+            <div class="icon-box">💰</div>
             <h2>Fatura Comercial</h2>
-            <p>Emissão de faturas definitivas para vendas de Hardware e computadores Core i3/i5/i7.</p>
+            <p>Venda direta de hardware, computadores e periféricos.</p>
         </a>
+
     </div>
 
     <footer class="main-footer">
         <p><b>SUECOMEDIA E TECNOLOGIA - PRESTAÇÃO DE SERVIÇOS, (SU), LDA.</b></p>
         <p>📍 Kilamba Kiaxi - Palanca, Utanga | Luanda, Angola</p>
-        <p>📞 959 354 904 | 928 872 457 | zando.market25@gmail.com</p>
-        <p style="margin-top: 20px; opacity: 0.4;">© 2026 Zando Marketplace - Gestão Interna.</p>
+        <p>📞 959 354 904 | 928 872 457 | zando.market25@gmail.com </p>
+        <p style="margin-top: 25px; opacity: 0.5; font-size: 10px;">
+            © 2026 Zando Marketplace - Sistema Interno de Gestão.
+        </p>
     </footer>
 
 </body>
