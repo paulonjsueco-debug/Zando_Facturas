@@ -28,11 +28,20 @@
             color: #333;
         }
 
-        /* Cabeçalho com Link no Logo */
-        .dashboard-header { text-align: center; margin-bottom: 50px; }
-        .logo-link { display: inline-block; text-decoration: none; cursor: pointer; }
-        .logo-img { max-width: 220px; height: auto; margin-bottom: 15px; border: none; }
-        h1 { font-size: 20px; color: var(--primary); text-transform: uppercase; letter-spacing: 1.5px; margin: 0; }
+        /* Barra de Navegação Superior */
+        nav { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 70px; 
+            background: white; 
+            display: flex; 
+            align-items: center; 
+            padding: 0 30px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            z-index: 1000; 
+        }
 
         /* Grade de Opções */
         .menu-container {
@@ -41,6 +50,7 @@
             gap: 25px;
             width: 90%;
             max-width: 850px;
+            margin-top: 100px; /* Compensa a nav fixa */
         }
 
         .card {
@@ -53,6 +63,7 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.04);
             border: 2px solid transparent;
             position: relative;
+            cursor: pointer;
         }
 
         .card:hover {
@@ -62,30 +73,10 @@
         }
 
         .icon { font-size: 45px; display: block; margin-bottom: 20px; }
-        h2 { font-size: 18px; margin: 0 0 10px; color: var(--primary); }
+        h2 { font-size: 18px; margin: 0 0 10px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
         p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin: 0; }
 
-        /* Estilo para Opções Desativadas */
-        .disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            filter: grayscale(1);
-        }
-        .disabled:hover { transform: none; border-color: transparent; }
-
-        .tag {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #e67e22;
-            color: white;
-            font-size: 9px;
-            padding: 4px 10px;
-            border-radius: 50px;
-            font-weight: 700;
-        }
-
-        /* Rodapé de Contactos Zando */
+        /* Rodapé */
         .main-footer {
             margin-top: 60px;
             text-align: center;
@@ -100,7 +91,7 @@
 </head>
 <body>
 
-    <nav style="position: fixed; top: 0; left: 0; width: 100%; height: 70px; background: white; display: flex; align-items: center; padding: 0 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000;">
+    <nav>
         <a href="index.html" style="text-decoration: none;">
             <img src="zando_logo_fatura.png" alt="Zando Logo" style="height: 45px; width: auto; display: block;">
         </a>
@@ -109,27 +100,24 @@
         </div>
     </nav>
 
-    <div style="margin-top: 100px;"></div>
-
     <div class="menu-container">
         <a href="proforma.html" class="card">
             <span class="icon">📄</span>
             <h2>Fatura Proforma</h2>
-            <p>Gerar orçamentos detalhados em A4 para cotações de equipamentos.</p>
+            <p>Gerar orçamentos detalhados em A4 para cotações de equipamentos Starlink e serviços.</p>
         </a>
 
-        <div class="card disabled">
-            <span class="tag">EM BREVE</span>
+        <a href="faturas.html" class="card">
             <span class="icon">💰</span>
             <h2>Fatura Comercial</h2>
-            <p>Módulo de venda direta com integração de stock e recibos de pagamento.</p>
-        </div>
+            <p>Emissão de faturas definitivas para vendas de Hardware e computadores Core i3/i5/i7.</p>
+        </a>
     </div>
 
     <footer class="main-footer">
         <p><b>SUECOMEDIA E TECNOLOGIA - PRESTAÇÃO DE SERVIÇOS, (SU), LDA.</b></p>
         <p>📍 Kilamba Kiaxi - Palanca, Utanga | Luanda, Angola</p>
-        <p>📞 959 354 904 | 928 872 457</p>
+        <p>📞 959 354 904 | 928 872 457 | zando.market25@gmail.com</p>
         <p style="margin-top: 20px; opacity: 0.4;">© 2026 Zando Marketplace - Gestão Interna.</p>
     </footer>
 
