@@ -10,23 +10,40 @@
 
     <style>
         @media print {
-    .no-print { display: none !important; }
-    body { padding: 0 !important; margin: 0 !important; background: white !important; }
-    /* Remove o espaço do topo para a fatura começar no início da folha */
-    div[style*="margin-top: 100px"] { margin-top: 0 !important; }
-}
+        /* Esconde a barra de navegação e qualquer elemento com a classe no-print */
+        .no-print { 
+            display: none !important; 
+            height: 0 !important; 
+            margin: 0 !important; 
+            padding: 0 !important;
+        }
 
-/* Efeito ao passar o rato no botão */
-a[href="index.html"]:hover {
-    background: #e0e0e0 !important;
-    transform: translateX(-3px);
-}
-        @media print {
-    .no-print { display: none !important; }
-    body { padding: 0 !important; margin: 0 !important; background: white !important; }
-    /* Garante que o conteúdo sobe para o topo no papel */
-    div[style*="margin-top: 100px"] { margin-top: 0 !important; }
-}
+        body { 
+            background: white !important; 
+            padding: 0 !important; 
+            margin: 0 !important; 
+        }
+
+        /* REMOVE O ESPAÇO DO TOPO: Força o espaçador a ter altura zero no PDF */
+        div[style*="margin-top: 100px"], 
+        div[style*="margin-top: 90px"] { 
+            margin-top: 0 !important; 
+            display: none !important;
+        }
+
+        /* Garante que o contentor da app não tenha margens no PDF */
+        .app-container { 
+            margin-top: 0 !important; 
+            padding-top: 0 !important; 
+        }
+
+        /* Ajusta a área da fatura para colar no topo */
+        #fatura-area { 
+            margin: 0 !important; 
+            box-shadow: none !important;
+            border: none !important;
+        }
+    }
         :root {
             --primary-color: #1a1a1a;
             --accent-color: #27ae60;
@@ -352,23 +369,24 @@ a[href="index.html"]:hover {
         document.getElementById('out_data').innerText = new Date().toLocaleDateString('pt-AO');
     }
 
-    function exportarParaPDF() {
-        const elemento = document.getElementById('fatura-area');
-        const opt = {
-            margin: 0, 
-            filename: 'Zando_Proforma.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { 
-                scale: 2, /* Escala 2 é ideal para manter qualidade sem sobrecarregar */
-                useCORS: true,
-                logging: false,
-                width: 793, /* Largura exata de 210mm em pixels (96dpi) */
-                height: 1122 /* Altura exata de 297mm em pixels (96dpi) */
-            },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-        html2pdf().set(opt).from(elemento).save();
-    }
+   function exportarParaPDF() {
+    const elemento = document.getElementById('fatura-area');
+    
+    const opt = {
+        margin: 0, // Margem zero no objeto do PDF
+        filename: 'Zando_Proforma.pdf',
+        image: { type: 'jpeg', quality: 1.0 },
+        html2canvas: { 
+            scale: 3, // Aumenta a qualidade
+            useCORS: true, 
+            scrollY: 0, // Força o scroll para o topo antes de capturar
+            windowHeight: elemento.scrollHeight 
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(elemento).save();
+}
 
     window.onload = () => {
         document.getElementById('out_data').innerText = new Date().toLocaleDateString('pt-AO');
