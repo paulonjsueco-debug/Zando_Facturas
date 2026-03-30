@@ -22,64 +22,60 @@
 
         .app-container { display: flex; gap: 20px; max-width: 1400px; margin: 100px auto 40px; justify-content: center; padding: 0 20px; }
         
-        /* SIDEBAR */
         .sidebar { width: 380px; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content; position: sticky; top: 90px; }
         .group { margin-bottom: 18px; border-bottom: 1px solid #f5f5f5; padding-bottom: 12px; }
         label { display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; margin-bottom: 5px; background: #fff; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; margin-bottom: 5px; }
         
-        .btn-add { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 700; margin-top: 5px; }
+        .btn-add { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 700; }
         .btn-pdf { background: var(--accent); color: white; border: none; padding: 16px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 700; margin-top: 20px; font-size: 14px; }
 
-        /* ÁREA DA FATURA (Ajuste de Margem Superior) */
+        /* A "FOLHA" AGORA É ELÁSTICA */
         #fatura-area { 
             width: 210mm; 
-            min-height: 297mm; /* Mínimo de uma folha A4 */
             background: white; 
-            padding: 20mm 20mm 15mm 20mm; /* 20mm no topo (2cm) */
+            padding: 20mm; /* 2cm de margem em todos os lados */
             display: flex; 
             flex-direction: column; 
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            min-height: 100px; /* Removemos o limite de 297mm para não esconder itens */
         }
         
         header { display: flex; justify-content: space-between; margin-bottom: 30px; align-items: flex-start; border-bottom: 2px solid #f9f9f9; padding-bottom: 15px; }
         .header-left .logo-img { max-width: 170px; height: auto; margin-bottom: 8px; display: block; }
-        .header-left p { margin: 1px 0; font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+        .header-left p { margin: 1px 0; font-size: 11px; color: var(--text-muted); }
         .header-right { text-align: right; }
-        .header-right h2 { margin: 0; font-size: 18px; color: #000; font-weight: 800; }
+        .header-right h2 { margin: 0; font-size: 18px; font-weight: 800; }
         .header-right p { margin: 4px 0 0; font-weight: 700; font-size: 13px; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 25px; table-layout: fixed; }
-        th { background: #f9f9f9; padding: 10px; border-bottom: 2px solid #000; font-size: 10px; text-align: left; text-transform: uppercase; }
-        td { padding: 12px 10px; border-bottom: 1px solid #eee; font-size: 12px; word-wrap: break-word; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 25px; }
+        th { background: #f9f9f9; padding: 10px; border-bottom: 2px solid #000; font-size: 10px; text-align: left; }
+        td { padding: 12px 10px; border-bottom: 1px solid #eee; font-size: 12px; }
 
-        .totals-box { margin-left: auto; width: 280px; }
         .grand-total { 
             font-size: 19px; 
             font-weight: 800; 
             border-top: 2px solid #000; 
-            margin-top: 8px; 
-            padding-top: 8px; 
+            margin-top: 20px; 
+            padding-top: 10px; 
             text-align: right; 
-            color: #000;
         }
 
-        /* Footer Cards - Evitar quebra no meio do card */
-        .info-footer-grid { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding-top: 25px; border-top: 1px solid #eee; page-break-inside: avoid; }
+        /* Rodapé fixo para não quebrar no meio */
+        .info-footer-grid { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding-top: 25px; border-top: 1px solid #eee; page-break-inside: avoid; }
         .info-card { background: #fbfbfb; padding: 12px; border-radius: 8px; border: 1px solid #f0f0f0; }
         .info-card b { font-size: 10px; color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 6px; }
-        .info-card p { margin: 3px 0; font-size: 11px; color: #444; }
 
         @media (max-width: 900px) {
             .app-container { flex-direction: column; margin-top: 80px; }
             .sidebar { width: 100%; position: static; }
-            #fatura-area { width: 100%; padding: 10mm; min-height: unset; }
+            #fatura-area { width: 100%; padding: 10mm; }
             .info-footer-grid { grid-template-columns: 1fr; }
         }
 
         @media print {
             .no-print-nav, .sidebar { display: none !important; }
-            #fatura-area { box-shadow: none; width: 100%; margin: 0; padding: 20mm; }
+            #fatura-area { box-shadow: none; width: 100%; padding: 20mm; }
         }
     </style>
 </head>
@@ -97,159 +93,105 @@
         <aside class="sidebar">
             <div class="group">
                 <label>Dados do Cliente</label>
-                <input type="text" id="in_cliente" placeholder="Nome do Cliente" oninput="update()">
+                <input type="text" id="in_cliente" placeholder="Nome" oninput="update()">
                 <input type="text" id="in_nif" placeholder="NIF" oninput="update()">
                 <input type="text" id="in_local" placeholder="Localização" oninput="update()">
             </div>
-
             <div class="group">
-                <label>Hardware</label>
+                <label>PC & Hardware</label>
                 <select id="in_cpu" onchange="autoPreco()">
-                    <option value="" data-price="0">-- Selecionar PC --</option>
-                    <option value="Core i3 - 4ª Geração" data-price="90000">Core i3 - 4ª Ger</option>
-                    <option value="Core i3 - 6ª Geração" data-price="110000">Core i3 - 6ª Ger</option>
-                    <option value="Core i5 - 6ª Geração" data-price="140000">Core i5 - 6ª Ger</option>
-                    <option value="Core i5 - 8ª Geração" data-price="170000">Core i5 - 8ª Ger</option>
-                    <option value="Core i7 - 6ª Geração" data-price="170000">Core i7 - 6ª Ger</option>
+                    <option value="" data-price="0">-- Selecionar Processador --</option>
+                    <option value="Core i5 - 8ª Geração" data-price="170000">Core i5 - 8ª Ger (170k)</option>
+                    <option value="Core i7 - 6ª Geração" data-price="170000">Core i7 - 6ª Ger (170k)</option>
                 </select>
-                <select id="in_ram" style="margin-top:5px;">
-                    <option value="8GB RAM DDR4">8GB RAM DDR4</option>
-                    <option value="16GB RAM DDR4" selected>16GB RAM DDR4</option>
-                </select>
-                <select id="in_disk" style="margin-top:5px;">
-                    <option value="240GB SSD" selected>240GB SSD</option>
-                    <option value="480GB SSD">480GB SSD</option>
-                </select>
-            </div>
-
-            <div class="group">
-                <label>Preço & Quantidade</label>
-                <input type="number" id="item_preco" placeholder="Kz">
+                <select id="in_ram" style="margin-top:5px;"><option value="16GB RAM DDR4">16GB RAM DDR4</option></select>
+                <select id="in_disk" style="margin-top:5px;"><option value="240GB SSD">240GB SSD</option></select>
+                <input type="number" id="item_preco" placeholder="Preço Kz" style="margin-top:5px;">
                 <input type="number" id="item_qtd" value="1">
-                <button class="btn-add" onclick="addItem()">ADICIONAR À LISTA</button>
+                <button class="btn-add" onclick="addItem()">ADICIONAR À FATURA</button>
             </div>
-
-            <button class="btn-pdf" onclick="exportPDF()">BAIXAR FATURA (PDF)</button>
+            <button class="btn-pdf" onclick="exportPDF()">GERAR PDF AGORA</button>
         </aside>
 
         <main id="fatura-area">
             <header>
                 <div class="header-left">
-                    <img src="zando_logo_fatura.png" alt="Logo" class="logo-img">
+                    <img src="zando_logo_fatura.png" alt="Zando" class="logo-img">
                     <p><b>SUECOMEDIA E TECNOLOGIA, (SU), LDA.</b></p>
                     <p>NIF: 5002657805 | Luanda, Angola</p>
                 </div>
                 <div class="header-right">
                     <h2>FATURA COMERCIAL</h2>
                     <p id="out_data">--/--/----</p>
-                    <p style="font-size: 10px; color: #777; font-weight: 400; margin-top:4px;">Nº FT-2026/001</p>
                 </div>
             </header>
 
             <div style="margin-bottom: 25px;">
-                <p style="margin: 0; color: #777; font-size: 10px; text-transform: uppercase; font-weight: 700;">Cliente:</p>
                 <p style="margin: 0; font-size: 15px; font-weight: 700;" id="out_cliente">---</p>
-                <p style="margin: 2px 0; font-size: 12px;">NIF: <span id="out_nif">---</span></p>
-                <p style="margin: 2px 0; font-size: 12px; color: #555;">📍 <span id="out_local">---</span></p>
+                <p style="margin: 2px 0; font-size: 12px;">NIF: <span id="out_nif">---</span> | 📍 <span id="out_local">---</span></p>
             </div>
 
             <table>
-                <thead>
-                    <tr>
-                        <th style="width: 65%;">DESCRIÇÃO DOS PRODUTOS</th>
-                        <th style="text-align: center; width: 10%;">QTD</th>
-                        <th style="text-align: right; width: 25%;">TOTAL (Kz)</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>DESCRIÇÃO DO HARDWARE</th><th style="text-align:center">QTD</th><th style="text-align:right">TOTAL (Kz)</th></tr></thead>
                 <tbody id="tabela_corpo"></tbody>
             </table>
 
-            <div style="display: flex; justify-content: flex-end; margin-bottom: 30px;">
-                <div class="totals-box">
-                    <div class="grand-total">
-                        <span style="font-size: 11px; font-weight: 400; display: block; color: var(--text-muted);">TOTAL GERAL:</span>
-                        <span id="out_total_geral">0,00 Kz</span>
-                    </div>
-                </div>
+            <div class="grand-total">
+                <span style="font-size: 11px; font-weight: 400; display: block; color: var(--text-muted);">TOTAL A PAGAR:</span>
+                <span id="out_total_geral">0,00 Kz</span>
             </div>
 
             <div class="info-footer-grid">
-                <div class="info-card">
-                    <b>Coordenadas Bancárias (BAI)</b>
-                    <p>IBAN: <b>AO06 0000 6400 8480 1028 2</b></p>
-                    <p>Titular: <b>Paulo Ngindo Jorge Sueco</b></p>
-                </div>
-                <div class="info-card">
-                    <b>Zando Marketplace</b>
-                    <p>📞 959 354 904 | 928 872 457</p>
-                    <p>📧 comercial@zando.co.ao</p>
-                </div>
+                <div class="info-card"><b>Banco BAI</b><p>IBAN: <b>AO06 0000 6400 8480 1028 2</b></p></div>
+                <div class="info-card"><b>Zando Contacts</b><p>📞 959 354 904 | 928 872 457</p></div>
             </div>
         </main>
     </div>
 
     <script>
-        let itensFatura = [];
-
-        function autoPreco() {
-            const select = document.getElementById('in_cpu');
-            const preco = select.options[select.selectedIndex].getAttribute('data-price');
-            document.getElementById('item_preco').value = preco;
+        let itens = [];
+        function autoPreco() { 
+            const s = document.getElementById('in_cpu'); 
+            document.getElementById('item_preco').value = s.options[s.selectedIndex].getAttribute('data-price'); 
         }
-
         function addItem() {
             const cpu = document.getElementById('in_cpu').value;
             const ram = document.getElementById('in_ram').value;
             const disk = document.getElementById('in_disk').value;
             const preco = parseFloat(document.getElementById('item_preco').value);
-            const qtd = parseInt(document.getElementById('item_qtd').value);
-
-            if (cpu && !isNaN(preco) && preco > 0) {
-                const desc = `<strong>${cpu}</strong><br><small>Specs: ${ram} / ${disk}</small>`;
-                itensFatura.push({ desc, preco, qtd });
+            if (cpu && preco > 0) {
+                itens.push({ desc: `<b>${cpu}</b><br><small>${ram} / ${disk}</small>`, preco, qtd: parseInt(document.getElementById('item_qtd').value) });
                 update();
-                document.getElementById('in_cpu').value = "";
-                document.getElementById('item_preco').value = "";
             }
         }
-
         function update() {
             document.getElementById('out_cliente').innerText = document.getElementById('in_cliente').value || "---";
             document.getElementById('out_nif').innerText = document.getElementById('in_nif').value || "---";
             document.getElementById('out_local').innerText = document.getElementById('in_local').value || "---";
             document.getElementById('out_data').innerText = new Date().toLocaleDateString('pt-AO');
-
             let soma = 0;
             const corpo = document.getElementById('tabela_corpo');
             corpo.innerHTML = "";
-
-            itensFatura.forEach((it) => {
-                const sub = it.preco * it.qtd;
-                soma += sub;
-                corpo.innerHTML += `<tr><td>${it.desc}</td><td style="text-align:center">${it.qtd}</td><td style="text-align:right; font-weight:700;">${sub.toLocaleString('pt-AO')} Kz</td></tr>`;
+            itens.forEach(it => {
+                soma += (it.preco * it.qtd);
+                corpo.innerHTML += `<tr><td>${it.desc}</td><td style="text-align:center">${it.qtd}</td><td style="text-align:right; font-weight:700;">${(it.preco * it.qtd).toLocaleString()} Kz</td></tr>`;
             });
-
-            document.getElementById('out_total_geral').innerText = soma.toLocaleString('pt-AO') + " Kz";
+            document.getElementById('out_total_geral').innerText = soma.toLocaleString() + " Kz";
         }
-
         function exportPDF() {
             const element = document.getElementById('fatura-area');
             const agora = new Date();
-            const timestamp = `${agora.toLocaleDateString('pt-AO').replaceAll('/','-')}_${agora.getHours()}h${agora.getMinutes()}`;
-
-            const opt = {
-                margin: 0,
-                filename: `Fatura_Zando_${timestamp}.pdf`,
+            const nome = `Fatura_Zando_${agora.toLocaleDateString('pt-AO').replaceAll('/','-')}_${agora.getHours()}h${agora.getMinutes()}.pdf`;
+            
+            html2pdf().set({
+                margin: [20, 0, 20, 0], // Margem de 20mm (2cm) no topo e fundo de cada página
+                filename: nome,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 3, useCORS: true, letterRendering: true },
+                html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-            };
-
-            html2pdf().set(opt).from(element).save();
+                pagebreak: { mode: 'css', before: '.info-footer-grid' } // Tenta manter o rodapé junto se possível
+            }).from(element).save();
         }
-
-        window.onload = update;
     </script>
 </body>
 </html>
