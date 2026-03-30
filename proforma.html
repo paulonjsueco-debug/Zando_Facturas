@@ -184,7 +184,7 @@
             const nome = `Fatura_Zando_${agora.toLocaleDateString('pt-AO').replaceAll('/','-')}_${agora.getHours()}h${agora.getMinutes()}.pdf`;
             
             html2pdf().set({
-                margin: [20, 0, 20, 0], // Margem de 20mm (2cm) no topo e fundo de cada página
+                margin: [0, 0, 0, 0], // Margem de 20mm (2cm) no topo e fundo de cada página
                 filename: nome,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2 },
