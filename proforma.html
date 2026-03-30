@@ -31,44 +31,44 @@
         .btn-add { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 700; margin-top: 5px; }
         .btn-pdf { background: var(--accent); color: white; border: none; padding: 16px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 700; margin-top: 20px; font-size: 14px; }
 
-        /* ÁREA DA FATURA (A4 dinâmico) */
+        /* ÁREA DA FATURA (Ajuste de Margem Superior) */
         #fatura-area { 
             width: 210mm; 
-            min-height: 297mm; 
+            min-height: 297mm; /* Mínimo de uma folha A4 */
             background: white; 
-            padding: 20mm; 
+            padding: 20mm 20mm 15mm 20mm; /* 20mm no topo (2cm) */
             display: flex; 
             flex-direction: column; 
-            box-shadow: 0 0 20px rgba(0,0,0,0.1); 
-            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
         
-        header { display: flex; justify-content: space-between; margin-bottom: 40px; align-items: flex-start; border-bottom: 2px solid #f9f9f9; padding-bottom: 20px; }
-        .header-left .logo-img { max-width: 180px; height: auto; margin-bottom: 10px; display: block; }
-        .header-left p { margin: 2px 0; font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+        header { display: flex; justify-content: space-between; margin-bottom: 30px; align-items: flex-start; border-bottom: 2px solid #f9f9f9; padding-bottom: 15px; }
+        .header-left .logo-img { max-width: 170px; height: auto; margin-bottom: 8px; display: block; }
+        .header-left p { margin: 1px 0; font-size: 11px; color: var(--text-muted); line-height: 1.4; }
         .header-right { text-align: right; }
         .header-right h2 { margin: 0; font-size: 18px; color: #000; font-weight: 800; }
-        .header-right p { margin: 5px 0 0; font-weight: 700; font-size: 14px; }
+        .header-right p { margin: 4px 0 0; font-weight: 700; font-size: 13px; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; margin-bottom: 30px; table-layout: fixed; }
-        th { background: #f9f9f9; padding: 12px 10px; border-bottom: 2px solid #000; font-size: 10px; text-align: left; text-transform: uppercase; }
-        td { padding: 15px 10px; border-bottom: 1px solid #eee; font-size: 12px; word-wrap: break-word; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 25px; table-layout: fixed; }
+        th { background: #f9f9f9; padding: 10px; border-bottom: 2px solid #000; font-size: 10px; text-align: left; text-transform: uppercase; }
+        td { padding: 12px 10px; border-bottom: 1px solid #eee; font-size: 12px; word-wrap: break-word; }
 
-        .totals-box { margin-left: auto; width: 300px; }
+        .totals-box { margin-left: auto; width: 280px; }
         .grand-total { 
-            font-size: 20px; 
+            font-size: 19px; 
             font-weight: 800; 
             border-top: 2px solid #000; 
-            margin-top: 10px; 
-            padding-top: 10px; 
+            margin-top: 8px; 
+            padding-top: 8px; 
             text-align: right; 
             color: #000;
         }
 
-        .info-footer-grid { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding-top: 30px; border-top: 1px solid #eee; }
-        .info-card { background: #fbfbfb; padding: 15px; border-radius: 8px; border: 1px solid #f0f0f0; }
-        .info-card b { font-size: 10px; color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 8px; }
-        .info-card p { margin: 4px 0; font-size: 11px; color: #444; }
+        /* Footer Cards - Evitar quebra no meio do card */
+        .info-footer-grid { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding-top: 25px; border-top: 1px solid #eee; page-break-inside: avoid; }
+        .info-card { background: #fbfbfb; padding: 12px; border-radius: 8px; border: 1px solid #f0f0f0; }
+        .info-card b { font-size: 10px; color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 6px; }
+        .info-card p { margin: 3px 0; font-size: 11px; color: #444; }
 
         @media (max-width: 900px) {
             .app-container { flex-direction: column; margin-top: 80px; }
@@ -78,9 +78,8 @@
         }
 
         @media print {
-            body { background: none; }
             .no-print-nav, .sidebar { display: none !important; }
-            #fatura-area { box-shadow: none; width: 100%; margin: 0; padding: 15mm; }
+            #fatura-area { box-shadow: none; width: 100%; margin: 0; padding: 20mm; }
         }
     </style>
 </head>
@@ -104,36 +103,33 @@
             </div>
 
             <div class="group">
-                <label>Configuração do Hardware</label>
+                <label>Hardware</label>
                 <select id="in_cpu" onchange="autoPreco()">
-                    <option value="" data-price="0">-- Selecionar Processador --</option>
-                    <option value="Core i3 - 4ª Geração" data-price="90000">Core i3 - 4ª Ger (90.000 Kz)</option>
-                    <option value="Core i3 - 6ª Geração" data-price="110000">Core i3 - 6ª Ger (110.000 Kz)</option>
-                    <option value="Core i5 - 6ª Geração" data-price="140000">Core i5 - 6ª Ger (140.000 Kz)</option>
-                    <option value="Core i5 - 8ª Geração" data-price="170000">Core i5 - 8ª Ger (170.000 Kz)</option>
-                    <option value="Core i7 - 6ª Geração" data-price="170000">Core i7 - 6ª Ger (170.000 Kz)</option>
+                    <option value="" data-price="0">-- Selecionar PC --</option>
+                    <option value="Core i3 - 4ª Geração" data-price="90000">Core i3 - 4ª Ger</option>
+                    <option value="Core i3 - 6ª Geração" data-price="110000">Core i3 - 6ª Ger</option>
+                    <option value="Core i5 - 6ª Geração" data-price="140000">Core i5 - 6ª Ger</option>
+                    <option value="Core i5 - 8ª Geração" data-price="170000">Core i5 - 8ª Ger</option>
+                    <option value="Core i7 - 6ª Geração" data-price="170000">Core i7 - 6ª Ger</option>
                 </select>
                 <select id="in_ram" style="margin-top:5px;">
-                    <option value="4GB RAM DDR3">4GB RAM DDR3</option>
-                    <option value="8GB RAM DDR3">8GB RAM DDR3</option>
                     <option value="8GB RAM DDR4">8GB RAM DDR4</option>
                     <option value="16GB RAM DDR4" selected>16GB RAM DDR4</option>
                 </select>
                 <select id="in_disk" style="margin-top:5px;">
                     <option value="240GB SSD" selected>240GB SSD</option>
                     <option value="480GB SSD">480GB SSD</option>
-                    <option value="1TB HDD">1TB HDD</option>
                 </select>
             </div>
 
             <div class="group">
-                <label>Preço & Qtd</label>
-                <input type="number" id="item_preco" placeholder="Preço Unitário (Kz)">
+                <label>Preço & Quantidade</label>
+                <input type="number" id="item_preco" placeholder="Kz">
                 <input type="number" id="item_qtd" value="1">
-                <button class="btn-add" onclick="addItem()">ADICIONAR ITEM</button>
+                <button class="btn-add" onclick="addItem()">ADICIONAR À LISTA</button>
             </div>
 
-            <button class="btn-pdf" onclick="exportPDF()">GERAR FATURA PDF</button>
+            <button class="btn-pdf" onclick="exportPDF()">BAIXAR FATURA (PDF)</button>
         </aside>
 
         <main id="fatura-area">
@@ -150,29 +146,28 @@
                 </div>
             </header>
 
-            <div style="margin-bottom: 30px; font-size: 12px;">
-                <p style="margin: 2px 0; color: #777; font-size: 10px; text-transform: uppercase; font-weight: 700;">Faturado a:</p>
-                <p style="margin: 0; font-size: 16px; font-weight: 700;" id="out_cliente">---</p>
-                <p style="margin: 2px 0;">NIF: <span id="out_nif">---</span></p>
-                <p style="margin: 2px 0; color: #555;">📍 <span id="out_local">---</span></p>
+            <div style="margin-bottom: 25px;">
+                <p style="margin: 0; color: #777; font-size: 10px; text-transform: uppercase; font-weight: 700;">Cliente:</p>
+                <p style="margin: 0; font-size: 15px; font-weight: 700;" id="out_cliente">---</p>
+                <p style="margin: 2px 0; font-size: 12px;">NIF: <span id="out_nif">---</span></p>
+                <p style="margin: 2px 0; font-size: 12px; color: #555;">📍 <span id="out_local">---</span></p>
             </div>
 
-            <table id="tabela_itens">
+            <table>
                 <thead>
                     <tr>
-                        <th style="width: 65%;">DESCRIÇÃO DOS PRODUTOS / HARDWARE</th>
+                        <th style="width: 65%;">DESCRIÇÃO DOS PRODUTOS</th>
                         <th style="text-align: center; width: 10%;">QTD</th>
                         <th style="text-align: right; width: 25%;">TOTAL (Kz)</th>
                     </tr>
                 </thead>
-                <tbody id="tabela_corpo">
-                    </tbody>
+                <tbody id="tabela_corpo"></tbody>
             </table>
 
-            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 30px;">
                 <div class="totals-box">
                     <div class="grand-total">
-                        <span style="font-size: 11px; font-weight: 400; display: block; color: var(--text-muted); margin-bottom: 5px;">TOTAL A PAGAR:</span>
+                        <span style="font-size: 11px; font-weight: 400; display: block; color: var(--text-muted);">TOTAL GERAL:</span>
                         <span id="out_total_geral">0,00 Kz</span>
                     </div>
                 </div>
@@ -180,12 +175,12 @@
 
             <div class="info-footer-grid">
                 <div class="info-card">
-                    <b>Banco BAI</b>
+                    <b>Coordenadas Bancárias (BAI)</b>
                     <p>IBAN: <b>AO06 0000 6400 8480 1028 2</b></p>
                     <p>Titular: <b>Paulo Ngindo Jorge Sueco</b></p>
                 </div>
                 <div class="info-card">
-                    <b>Contactos Zando</b>
+                    <b>Zando Marketplace</b>
                     <p>📞 959 354 904 | 928 872 457</p>
                     <p>📧 comercial@zando.co.ao</p>
                 </div>
@@ -210,16 +205,11 @@
             const qtd = parseInt(document.getElementById('item_qtd').value);
 
             if (cpu && !isNaN(preco) && preco > 0) {
-                const descCompleta = `<strong>Computador:</strong> ${cpu}<br><small>Especificações: ${ram} / ${disk}</small>`;
-                itensFatura.push({ desc: descCompleta, preco, qtd });
-                
-                // Limpar campos
+                const desc = `<strong>${cpu}</strong><br><small>Specs: ${ram} / ${disk}</small>`;
+                itensFatura.push({ desc, preco, qtd });
+                update();
                 document.getElementById('in_cpu').value = "";
                 document.getElementById('item_preco').value = "";
-                
-                update();
-            } else {
-                alert("Por favor, selecione um processador e verifique o preço.");
             }
         }
 
@@ -229,39 +219,29 @@
             document.getElementById('out_local').innerText = document.getElementById('in_local').value || "---";
             document.getElementById('out_data').innerText = new Date().toLocaleDateString('pt-AO');
 
-            let somaTotal = 0;
+            let soma = 0;
             const corpo = document.getElementById('tabela_corpo');
             corpo.innerHTML = "";
 
             itensFatura.forEach((it) => {
-                const totalItem = it.preco * it.qtd;
-                somaTotal += totalItem;
-                
-                corpo.innerHTML += `
-                    <tr>
-                        <td>${it.desc}</td>
-                        <td style="text-align: center;">${it.qtd}</td>
-                        <td style="text-align: right; font-weight: 700;">${totalItem.toLocaleString('pt-AO')} Kz</td>
-                    </tr>
-                `;
+                const sub = it.preco * it.qtd;
+                soma += sub;
+                corpo.innerHTML += `<tr><td>${it.desc}</td><td style="text-align:center">${it.qtd}</td><td style="text-align:right; font-weight:700;">${sub.toLocaleString('pt-AO')} Kz</td></tr>`;
             });
 
-            document.getElementById('out_total_geral').innerText = somaTotal.toLocaleString('pt-AO') + " Kz";
+            document.getElementById('out_total_geral').innerText = soma.toLocaleString('pt-AO') + " Kz";
         }
 
         function exportPDF() {
             const element = document.getElementById('fatura-area');
             const agora = new Date();
-            const dataStr = agora.toLocaleDateString('pt-AO').replaceAll('/', '-');
-            const horaStr = agora.getHours() + 'h' + agora.getMinutes();
-            const nomeArquivo = `Fatura_Comercial_Zando_${dataStr}_${horaStr}.pdf`;
+            const timestamp = `${agora.toLocaleDateString('pt-AO').replaceAll('/','-')}_${agora.getHours()}h${agora.getMinutes()}`;
 
-            // Configuração para múltiplas páginas automática
             const opt = {
                 margin: 0,
-                filename: nomeArquivo,
+                filename: `Fatura_Zando_${timestamp}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
+                html2canvas: { scale: 3, useCORS: true, letterRendering: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
