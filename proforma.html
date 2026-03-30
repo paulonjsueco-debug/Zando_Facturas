@@ -13,62 +13,63 @@
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; transition: all 0.2s ease; }
         body { background: #f0f2f5; margin: 0; padding: 0; color: #333; }
 
-        /* BARRA FIXA (IDÊNTICA AO FATURAS.HTML) */
+        /* NAVEGAÇÃO IDENTICA AO FATURAS */
         .no-print-nav { 
             position: fixed; top: 0; left: 0; width: 100%; height: 70px; background: white; 
             display: flex; align-items: center; justify-content: space-between; 
             padding: 0 40px; box-shadow: 0 2px 15px rgba(0,0,0,0.08); z-index: 1000; 
         }
-
-        .btn-voltar {
-            text-decoration: none; background: #f5f5f5; color: #1a1a1a; 
-            padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: 700;
-        }
-        .btn-voltar:hover { background: #e0e0e0; }
+        .btn-voltar { text-decoration: none; background: #f5f5f5; color: #1a1a1a; padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: 700; }
 
         .app-container { display: flex; gap: 20px; max-width: 1400px; margin: 100px auto 40px; justify-content: center; padding: 0 20px; }
-
-        /* PAINEL LATERAL */
+        
+        /* SIDEBAR */
         .sidebar { width: 380px; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content; position: sticky; top: 90px; }
         .group { margin-bottom: 18px; border-bottom: 1px solid #f5f5f5; padding-bottom: 12px; }
         label { display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; margin-bottom: 5px; background: #fff; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; margin-bottom: 5px; background: #fff; }
         
         .btn-add { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 700; margin-top: 5px; }
         .btn-pdf { background: var(--accent); color: white; border: none; padding: 16px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 700; margin-top: 20px; font-size: 14px; }
 
-        /* ÁREA DA FATURA A4 */
-        #fatura-area { width: 210mm; min-height: 297mm; background: white; padding: 20mm; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.1); margin-bottom: 50px; }
+        /* ÁREA DA FATURA */
+        #fatura-area { width: 210mm; min-height: 297mm; background: white; padding: 20mm; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
         
-        header { display: flex; justify-content: space-between; margin-bottom: 40px; align-items: flex-start; }
-        .logo-img { max-width: 200px; height: auto; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 30px; }
+        /* CABEÇALHO UNIFICADO (SUECOMEDIA) */
+        header { display: flex; justify-content: space-between; margin-bottom: 40px; align-items: flex-start; border-bottom: 2px solid #f9f9f9; padding-bottom: 20px; }
+        .header-left .logo-img { max-width: 180px; height: auto; margin-bottom: 10px; display: block; }
+        .header-left p { margin: 2px 0; font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+        .header-right { text-align: right; }
+        .header-right h2 { margin: 0; font-size: 18px; color: #000; letter-spacing: -0.5px; font-weight: 800; }
+        .header-right p { margin: 5px 0 0; font-weight: 700; font-size: 14px; }
+
+        /* TABELA E CONTEÚDO */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; margin-bottom: 30px; }
         th { background: #f9f9f9; padding: 12px 10px; border-bottom: 2px solid #000; font-size: 10px; text-align: left; text-transform: uppercase; }
-        td { padding: 15px 10px; border-bottom: 1px solid #eee; font-size: 12px; line-height: 1.4; }
+        td { padding: 15px 10px; border-bottom: 1px solid #eee; font-size: 12px; }
 
         .totals-box { margin-left: auto; width: 280px; font-size: 13px; }
-        .total-item { display: flex; justify-content: space-between; padding: 6px 0; }
-        .grand-total { font-size: 18px; font-weight: 800; border-top: 2px solid #000; margin-top: 12px; padding-top: 12px; }
+        .grand-total { font-size: 18px; font-weight: 800; border-top: 2px solid #000; margin-top: 12px; padding-top: 12px; text-align: right; }
 
         /* RODAPÉ CARDS */
         .info-footer-grid { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding-top: 30px; border-top: 1px solid #eee; }
         .info-card { background: #fbfbfb; padding: 15px; border-radius: 8px; border: 1px solid #f0f0f0; }
         .info-card b { font-size: 10px; color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 8px; }
-        .info-card p { margin: 4px 0; font-size: 11px; color: #444; }
+        .info-card p { margin: 4px 0; font-size: 11px; color: #444; line-height: 1.5; }
 
         /* RESPONSIVIDADE */
         @media (max-width: 900px) {
+            .no-print-nav { padding: 0 20px; }
+            .no-print-nav div { display: none; }
             .app-container { flex-direction: column; margin-top: 80px; }
             .sidebar { width: 100%; position: static; }
-            #fatura-area { width: 100%; padding: 10mm; min-height: unset; }
-            .no-print-nav { padding: 0 20px; }
+            #fatura-area { width: 100%; padding: 10mm; height: auto; min-height: unset; }
             .info-footer-grid { grid-template-columns: 1fr; }
         }
 
         @media print {
             .no-print-nav, .sidebar { display: none !important; }
-            #fatura-area { box-shadow: none; margin: 0; width: 210mm; }
+            #fatura-area { box-shadow: none; margin: 0; width: 210mm; padding: 15mm; }
         }
     </style>
 </head>
@@ -92,16 +93,16 @@
             </div>
 
             <div class="group">
-                <label>Item / Serviço</label>
-                <input type="text" id="item_desc" placeholder="Ex: Kit Starlink Standard">
-                <input type="number" id="item_preco" placeholder="Preço (Kz)">
+                <label>Adicionar Item</label>
+                <input type="text" id="item_desc" placeholder="Descrição (Ex: Starlink Kit)">
+                <input type="number" id="item_preco" placeholder="Preço unitário (Kz)">
                 <input type="number" id="item_qtd" value="1">
                 <button class="btn-add" onclick="addItem()">ADICIONAR ITEM</button>
             </div>
 
             <div class="group">
-                <label>Notas</label>
-                <textarea id="in_obs" placeholder="Validade da proforma, prazo..." oninput="update()"></textarea>
+                <label>Notas de Validade</label>
+                <textarea id="in_obs" placeholder="Ex: Proforma válida por 5 dias úteis..." oninput="update()"></textarea>
             </div>
 
             <button class="btn-pdf" onclick="exportPDF()">GERAR PROFORMA PDF</button>
@@ -109,27 +110,29 @@
 
         <main id="fatura-area">
             <header>
-                <div class="brand">
-                    <img src="zando_logo_fatura.png" alt="Logo" class="logo-img">
+                <div class="header-left">
+                    <img src="zando_logo_fatura.png" alt="Zando Logo" class="logo-img">
                     <p><b>SUECOMEDIA E TECNOLOGIA, (SU), LDA.</b></p>
                     <p>NIF: 5002657805 | Luanda, Angola</p>
                 </div>
-                <div style="text-align: right;">
-                    <h2 style="margin:0; font-size: 18px;">FATURA PROFORMA</h2>
-                    <p id="out_data" style="font-weight: 600;">--/--/----</p>
+                <div class="header-right">
+                    <h2>FATURA PROFORMA</h2>
+                    <p id="out_data">--/--/----</p>
+                    <p style="font-size: 10px; color: #777; font-weight: 400; margin-top: 4px;">ORÇAMENTO ESTIMADO</p>
                 </div>
             </header>
 
             <div style="margin-bottom: 30px; font-size: 12px;">
+                <p style="margin: 2px 0; color: #777; font-size: 10px; text-transform: uppercase; font-weight: 700;">Emitido para:</p>
                 <p style="margin: 0; font-size: 16px; font-weight: 700;" id="out_cliente">---</p>
                 <p style="margin: 2px 0;">NIF: <span id="out_nif">---</span></p>
-                <p style="margin: 2px 0;">📍 <span id="out_local">---</span></p>
+                <p style="margin: 2px 0; color: #555;">📍 <span id="out_local">---</span></p>
             </div>
 
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 60%;">DESCRIÇÃO</th>
+                        <th style="width: 65%;">DESCRIÇÃO DOS SERVIÇOS / EQUIPAMENTOS</th>
                         <th style="text-align: center;">QTD</th>
                         <th style="text-align: right;">TOTAL (Kz)</th>
                     </tr>
@@ -137,20 +140,22 @@
                 <tbody id="tabela_corpo"></tbody>
             </table>
 
-            <div style="display: flex; justify-content: space-between;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                 <div style="width: 50%;">
-                    <p style="font-size: 10px; font-weight: 700; color: var(--text-muted);">NOTAS:</p>
-                    <p id="out_obs" style="font-size: 11px; color: #555;">Válido por 5 dias.</p>
+                    <p style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Notas Importantes:</p>
+                    <p id="out_obs" style="font-size: 11px; color: #555; white-space: pre-line;">Esta proforma não serve como fatura de pagamento definitiva.</p>
                 </div>
                 <div class="totals-box">
-                    <div class="total-item"><span>SUBTOTAL:</span> <span id="out_sub">0,00 Kz</span></div>
-                    <div class="total-item grand-total"><span>TOTAL:</span> <span id="out_total">0,00 Kz</span></div>
+                    <div class="grand-total">
+                        <span style="font-size: 12px; font-weight: 400; display: block; color: var(--text-muted);">TOTAL ESTIMADO:</span>
+                        <span id="out_total">0,00 Kz</span>
+                    </div>
                 </div>
             </div>
 
             <div class="info-footer-grid">
                 <div class="info-card">
-                    <b>Dados Bancários (BAI)</b>
+                    <b>Coordenadas Bancárias (BAI)</b>
                     <p>IBAN: <b>AO06 0000 6400 8480 1028 2</b></p>
                     <p>Titular: <b>Paulo Ngindo Jorge Sueco</b></p>
                 </div>
@@ -184,20 +189,23 @@
             document.getElementById('out_nif').innerText = document.getElementById('in_nif').value || "---";
             document.getElementById('out_local').innerText = document.getElementById('in_local').value || "---";
             document.getElementById('out_data').innerText = new Date().toLocaleDateString('pt-AO');
-            document.getElementById('out_obs').innerText = document.getElementById('in_obs').value || "Válido por 5 dias.";
+            document.getElementById('out_obs').innerText = document.getElementById('in_obs').value || "Esta proforma não serve como fatura de pagamento definitiva.";
 
-            let totalGeral = 0;
+            let total = 0;
             const corpo = document.getElementById('tabela_corpo');
             corpo.innerHTML = "";
 
-            itens.forEach(it => {
-                const total = it.preco * it.qtd;
-                totalGeral += total;
-                corpo.innerHTML += `<tr><td>${it.desc}</td><td style="text-align:center">${it.qtd}</td><td style="text-align:right">${total.toLocaleString()} Kz</td></tr>`;
+            itens.forEach((it) => {
+                const soma = it.preco * it.qtd;
+                total += soma;
+                corpo.innerHTML += `<tr>
+                    <td>${it.desc}</td>
+                    <td style="text-align: center;">${it.qtd}</td>
+                    <td style="text-align: right; font-weight: 600;">${soma.toLocaleString('pt-AO')} Kz</td>
+                </tr>`;
             });
 
-            document.getElementById('out_sub').innerText = totalGeral.toLocaleString() + " Kz";
-            document.getElementById('out_total').innerText = totalGeral.toLocaleString() + " Kz";
+            document.getElementById('out_total').innerText = total.toLocaleString('pt-AO') + " Kz";
         }
 
         function exportPDF() {
@@ -210,7 +218,7 @@
             html2pdf().set({
                 margin: 0,
                 filename: nomeArquivo,
-                html2canvas: { scale: 3, scrollY: 0 },
+                html2canvas: { scale: 3, useCORS: true, scrollY: 0 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             }).from(element).save();
         }
